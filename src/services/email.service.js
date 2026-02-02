@@ -37,7 +37,7 @@ async function sendNotification(data) {
     // --- EMAIL B: FOR THE CUSTOMER ---
     // Professional HTML receipt so they feel safe.
     const userMailOptions = {
-        from: `"Dubai Bus Services" <${process.env.EMAIL_USER}>`, // Shows a professional name
+        from: `"CarLyft" <${process.env.EMAIL_USER}>`, // Shows a professional name
         to: email, // Sends to the email they typed in the form
         subject: `✅ Booking Received: Pickup Request for ${name}`,
         html: `

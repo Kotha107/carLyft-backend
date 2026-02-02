@@ -15,15 +15,17 @@ exports.appendLead = async (data) => {
 
     // Extract variables
     const { name, email, phone, pickup, destination, date, frequency, timeFrom, timeTo } = data;
-const readableTimestamp = new Date().toLocaleString('en-US', { 
+const dubaiTime = new Date().toLocaleString('en-US', { 
+        timeZone: 'Asia/Dubai', // <--- This forces Dubai time regardless of where the server is
         year: 'numeric', 
         month: 'short', 
         day: 'numeric', 
         hour: '2-digit', 
-        minute: '2-digit' 
+        minute: '2-digit',
+        hour12: true
     });
     const row = [
-        readableTimestamp,
+        dubaiTime,
         name,                     
         email,                    
         phone,                    
