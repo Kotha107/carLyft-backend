@@ -2,19 +2,32 @@ const nodemailer = require('nodemailer');
 const dotenv = require('dotenv');
 dotenv.config();
 
-// FIX: Switch back to Port 587 (Standard for Cloud Servers)
+const smtpHost = process.env.SMTP_HOST || 'smtp.gmail.com';
+const smtpPort = Number(process.env.SMTP_PORT || 587);
+const smtpSecure = smtpPort === 465;
+
+// Use explicit timeouts to avoid long hangs on hosted platforms.
 const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 587,
-    secure: false, // Must be false for Port 587
-    requireTLS: true, // Forces a secure connection
+    host: smtpHost,
+    port: smtpPort,
+    secure: smtpSecure,
+    requireTLS: !smtpSecure,
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
     },
+    connectionTimeout: 10000,
+    greetingTimeout: 10000,
+    socketTimeout: 15000,
+    logger: process.env.EMAIL_DEBUG === 'true',
+    debug: process.env.EMAIL_DEBUG === 'true',
 });
 
 async function sendNotification(data) {
+    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+        throw new Error('Missing EMAIL_USER or EMAIL_PASS environment variables.');
+    }
+
     const { name, email, phone, pickup, destination, date, frequency, timeFrom, timeTo } = data;
 
     // --- EMAIL A: FOR ADMIN ---
